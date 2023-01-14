@@ -1,3 +1,5 @@
+import std/algorithm
+import std/sequtils
 import std/strformat
 
 
@@ -9,7 +11,7 @@ proc main(): cint =
   echo "P3"
   echo fmt"{imageWidth} {imageHeight}"
   echo "255"
-  for j in 0..<imageHeight:
+  for j in (0..<imageHeight).toSeq().reversed():
     for i in 0..<imageWidth:
       let
         r = i.float / (imageWidth - 1)
