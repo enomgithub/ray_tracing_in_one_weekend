@@ -1,6 +1,7 @@
 import std/algorithm
 import std/sequtils
 import std/strformat
+import std/terminal
 
 
 proc main(): cint =
@@ -12,6 +13,7 @@ proc main(): cint =
   echo fmt"{imageWidth} {imageHeight}"
   echo "255"
   for j in (0..<imageHeight).toSeq().reversed():
+    stderr.styledWriteLine(fgRed, "Scanlines remaining: ", resetStyle, fmt"{j}")
     for i in 0..<imageWidth:
       let
         r = i.float / (imageWidth - 1)
@@ -23,6 +25,12 @@ proc main(): cint =
         ib = (255.999 * b).int
 
       echo fmt"{ir} {ig} {ib}"
+
+    stderr.cursorUp(1)
+    stderr.eraseLine()
+  
+  stderr.styledWriteLine(fgRed, "Done")
+
   0
 
 
