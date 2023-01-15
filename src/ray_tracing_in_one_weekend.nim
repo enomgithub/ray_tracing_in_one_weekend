@@ -44,6 +44,7 @@ proc main(): cint =
     viewportWidth = aspectRatio * viewportHeight
     focalLength = 1.0
 
+  let
     origin = newPoint3(0, 0, 0)
     horizontal = newVec3(viewportWidth, 0, 0)
     vertical = newVec3(0, viewportHeight, 0)

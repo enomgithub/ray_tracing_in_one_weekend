@@ -1,7 +1,7 @@
 import vec3
 
 
-type Ray* = object
+type Ray* = ref object
   orig: Point3
   dir: Vec3
 

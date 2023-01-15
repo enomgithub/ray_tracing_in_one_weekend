@@ -3,7 +3,7 @@ import std/strformat
 
 
 type
-  Vec3* = object
+  Vec3* = ref object
     e: array[3, float]
 
   Point3* = distinct Vec3
