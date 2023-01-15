@@ -1,4 +1,5 @@
 import std/algorithm
+import std/math
 import std/sequtils
 import std/strformat
 import std/terminal
@@ -8,7 +9,7 @@ import ray
 import vec3 
 
 
-func hitSphere(center: Point3, radius: float, r: Ray): bool =
+func hitSphere(center: Point3, radius: float, r: Ray): float =
   let
     oc = r.origin - center
     a = r.direction.dot r.direction
@@ -16,12 +17,15 @@ func hitSphere(center: Point3, radius: float, r: Ray): bool =
     c = (oc.toVec.dot oc.toVec) - radius * radius
     discriminant = b * b - 4 * a * c
 
-  discriminant > 0
+  if discriminant < 0: -1.0
+  else: (-b - discriminant.sqrt) / (2.0 * a)
 
 
 func rayColor(r: Ray): Color =
-  if hitSphere(newPoint3(0, 0, -1), 0.5, r):
-    newColor(1, 0, 0)
+  let t = hitSphere(newPoint3(0, 0, -1), 0.5, r)
+  if t > 0.0:
+    let n = r.at(t).toVec.unit - newVec3(0, 0, -1)
+    0.5 * newColor(n.x + 1, n.y + 1, n.z + 1)
   else:
     let
       unitDirection = r.direction.unit

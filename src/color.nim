@@ -35,6 +35,7 @@ func `cross`*(self, color: Color): Color {.borrow.}
 func `+=`*(self: var Color, color: Color) {.borrow.}
 func `*=`*(self: var Color, scalar: float) {.borrow.}
 func `/=`*(self: var Color, scalar: float) {.borrow.}
+func lengthSquared*(self: Color): float {.borrow.}
 func length*(self: Color): float {.borrow.}
 func unit*(self: Color): Color {.borrow.}
 

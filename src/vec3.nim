@@ -71,7 +71,7 @@ func `*=`*(self: var Vec3, scalar: float) =
 func `/=`*(self: var Vec3, scalar: float) =
   self *= 1 / scalar
 
-func lengthSquared(self: Vec3): float =
+func lengthSquared*(self: Vec3): float =
   self.x * self.x + self.y * self.y + self.z * self.z
 
 func length*(self: Vec3): float =
@@ -103,6 +103,7 @@ func `cross`*(self, point: Point3): Point3 {.borrow.}
 func `+=`*(self: var Point3, point: Point3) {.borrow.}
 func `*=`*(self: var Point3, scalar: float) {.borrow.}
 func `/=`*(self: var Point3, scalar: float) {.borrow.}
+func lengthSquared*(self: Point3): float {.borrow.}
 func length*(self: Point3): float {.borrow.}
 func unit*(self: Point3): Point3 {.borrow.}
 
