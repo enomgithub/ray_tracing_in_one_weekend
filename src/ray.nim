@@ -15,4 +15,4 @@ func direction*(self: Ray): Vec3 =
   self.dir
 
 func at*(self: Ray, t: float): Point3 =
-  self.orig + t * self.dir
+  self.orig + t * self.dir.toPoint

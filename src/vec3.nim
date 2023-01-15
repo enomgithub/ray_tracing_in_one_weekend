@@ -2,8 +2,12 @@ import std/math
 import std/strformat
 
 
-type Vec3* = object
-  e: array[3, float]
+type
+  Vec3* = object
+    e: array[3, float]
+
+  Point3* = distinct Vec3
+
 
 func newVec3*(x, y, z: float): Vec3 =
   Vec3(e: [x, y, z])
@@ -76,28 +80,31 @@ func length*(self: Vec3): float =
 func unit*(self: Vec3): Vec3 =
   self / self.length
 
+func toPoint*(self: Vec3): Point3 =
+  self.Point3
 
-# type Point3* = distinct Vec3
-type Point3* = Vec3
 
 func newPoint3*(x, y, z: float): Point3 =
   newVec3(x, y, z).Point3
 
-# func `[]`*(self: Point3, i: int): float {.borrow.}
-# func x*(self: Point3): float {.borrow.}
-# func y*(self: Point3): float {.borrow.}
-# func z*(self: Point3): float {.borrow.}
-# func `-`*(self: Point3): Point3 {.borrow.}
-# func `+`*(self, point: Point3): Point3 {.borrow.}
-# func `-`*(self, point: Point3): Point3 {.borrow.}
-# func `*`*(self, point: Point3): Point3 {.borrow.}
-# func `*`*(self: Point3, scalar: float): Point3 {.borrow.}
-# func `*`*(scalar: float, point: Point3): Point3 {.borrow.}
-# func `/`*(self: Point3, scalar: float): Point3 {.borrow.}
-# func `dot`*(self, point: Point3): float {.borrow.}
-# func `cross`*(self, point: Point3): Point3 {.borrow.}
-# func `+=`*(self: var Point3, point: Point3) {.borrow.}
-# func `*=`*(self: var Point3, scalar: float) {.borrow.}
-# func `/=`*(self: var Point3, scalar: float) {.borrow.}
-# func length*(self: Point3): float {.borrow.}
-# func unit*(self: Point3): Point3 {.borrow.}
+func `[]`*(self: Point3, i: int): float {.borrow.}
+func x*(self: Point3): float {.borrow.}
+func y*(self: Point3): float {.borrow.}
+func z*(self: Point3): float {.borrow.}
+func `-`*(self: Point3): Point3 {.borrow.}
+func `+`*(self, point: Point3): Point3 {.borrow.}
+func `-`*(self, point: Point3): Point3 {.borrow.}
+func `*`*(self, point: Point3): Point3 {.borrow.}
+func `*`*(self: Point3, scalar: float): Point3 {.borrow.}
+func `*`*(scalar: float, point: Point3): Point3 {.borrow.}
+func `/`*(self: Point3, scalar: float): Point3 {.borrow.}
+func `dot`*(self, point: Point3): float {.borrow.}
+func `cross`*(self, point: Point3): Point3 {.borrow.}
+func `+=`*(self: var Point3, point: Point3) {.borrow.}
+func `*=`*(self: var Point3, scalar: float) {.borrow.}
+func `/=`*(self: var Point3, scalar: float) {.borrow.}
+func length*(self: Point3): float {.borrow.}
+func unit*(self: Point3): Point3 {.borrow.}
+
+func toVec*(self: Point3): Vec3 =
+  self.Vec3
