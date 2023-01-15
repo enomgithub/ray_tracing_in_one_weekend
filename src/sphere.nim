@@ -32,6 +32,7 @@ proc hit*(self: Sphere, r: Ray, tMin, tMax: float, rec: var HitRecord): bool =
   
   rec.t = root
   rec.p = r.at(rec.t)
-  rec.normal = (rec.p - self.center).toVec / self.radius
+  let outwardNormal = (rec.p - self.center).toVec / self.radius
+  rec.setFaceNormal(r, outwardNormal)
 
   true
