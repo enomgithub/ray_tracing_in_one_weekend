@@ -12,13 +12,13 @@ import vec3
 func hitSphere(center: Point3, radius: float, r: Ray): float =
   let
     oc = r.origin - center
-    a = r.direction.dot r.direction
-    b = 2.0 * oc.toVec.dot r.direction
-    c = (oc.toVec.dot oc.toVec) - radius * radius
-    discriminant = b * b - 4 * a * c
+    a = r.direction.lengthSquared
+    halfB = oc.toVec.dot r.direction
+    c = oc.toVec.lengthSquared - radius * radius
+    discriminant = halfB * halfB - a * c
 
   if discriminant < 0: -1.0
-  else: (-b - discriminant.sqrt) / (2.0 * a)
+  else: (-halfB - discriminant.sqrt) / a
 
 
 func rayColor(r: Ray): Color =
