@@ -3,10 +3,12 @@ import std/sequtils
 import std/strformat
 import std/terminal
 
+import camera
 import color
 import hittable
 import hittable_list
 import ray
+import rtweekend
 import sphere
 import vec3 
 
@@ -28,21 +30,13 @@ proc main(): cint =
     aspectRatio = 16.0 / 9.0
     imageWidth = 400
     imageHeight = (imageWidth / aspectRatio).int
+    samplesPerPixel = 100
 
   let world = newHittableList[Sphere]()
   world.add(newSphere(newPoint3(0, 0, -1), 0.5))
   world.add(newSphere(newPoint3(0, -100.5, -1), 100))
 
-  const
-    viewportHeight = 2.0
-    viewportWidth = aspectRatio * viewportHeight
-    focalLength = 1.0
-
-  let
-    origin = newPoint3(0, 0, 0)
-    horizontal = newVec3(viewportWidth, 0, 0)
-    vertical = newVec3(0, viewportHeight, 0)
-    lowerLeftCorner = origin.toVec - horizontal / 2 - vertical / 2 - newVec3(0, 0, focalLength)
+  let camera = newCamera()
 
   echo "P3"
   echo fmt"{imageWidth} {imageHeight}"
@@ -50,13 +44,15 @@ proc main(): cint =
   for j in (0..<imageHeight).toSeq.reversed:
     stderr.styledWriteLine(fgRed, "Scanlines remaining: ", resetStyle, fmt"{j}")
     for i in 0..<imageWidth:
-      let
-        u = (i / (imageWidth - 1)).float
-        v = (j / (imageHeight - 1)).float
-        ray = newRay(origin, lowerLeftCorner + u * horizontal + v * vertical - origin.toVec)
-        pixelColor = ray.getColor(world)
+      var pixelColor = newColor(0, 0, 0)
+      for s in 0..<samplesPerPixel:
+        let
+          u = (i.float + randomFloat()) / (imageWidth - 1)
+          v = (j.float + randomFloat()) / (imageHeight - 1)
+          ray = camera.getRay(u, v)
+        pixelColor += ray.getColor(world)
 
-      stdout.writeColor(pixelColor)
+      stdout.writeColor(pixelColor, samplesPerPixel)
 
     stderr.cursorUp(1)
     stderr.eraseLine
