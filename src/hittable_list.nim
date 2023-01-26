@@ -1,18 +1,19 @@
 import hittable
 import ray
+import sphere
 
 
 type
-  HittableList* {.explain.} = concept x
-    x is Hittable
-    x.clear is proc(self: HittableList)
-    x.add is proc(self: HittableList, obj: Hittable)
-    x.objects is seq[Hittable]
+  HittableList* = ref object
+    # hit: proc(self: HittableList, r: Ray, tMin, tMax: float, rec: var HitRecord): bool
+    # clear: proc(self: HittableList)
+    # add: proc(self: HittableList, obj: T)
+    objects: seq[Sphere]
 
 
-func hit(self: HittableList, r: Ray, tMin, tMax: float, rec: var HitRecord): bool =
+func hit*(self: HittableList, r: Ray, tMin, tMax: float, rec: var HitRecord): bool =
   var
-    tempRec: HitRecord
+    tempRec = new HitRecord
     hitAnything = false
     closestSoFar = tMax
   
@@ -25,19 +26,19 @@ func hit(self: HittableList, r: Ray, tMin, tMax: float, rec: var HitRecord): boo
   hitAnything
 
 
-proc clear(self: HittableList) =
+proc clear*(self: HittableList) =
   self.objects = @[]
 
 
-proc add(self: HittableList, obj: Hittable) =
+proc add*(self: HittableList, obj: Sphere) =
   self.objects.add(obj)
 
 
-func newHittableList*(objects: seq[Hittable]): HittableList =
+func newHittableList*(objects: seq[Sphere] = @[]): HittableList =
   HittableList(
     objects: objects,
-    hit: proc(self: HittableList, r: Ray, tMin, tMax: float, rec: var HitRecord): bool =
-      self.hit(r, tMin, tMax, rec),
-    clear: proc(self: HittableList) = self.clear(),
-    add: proc(self: HittableList, obj: Hittable) = self.add(obj)
+    # hit: proc(self: HittableList, r: Ray, tMin, tMax: float, rec: var HitRecord): bool =
+    #   self.hit(r, tMin, tMax, rec),
+    # clear: proc(self: HittableList) = self.clear(),
+    # add: proc(self: HittableList, obj: T) = self.add(obj)
   )

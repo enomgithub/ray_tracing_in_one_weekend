@@ -8,6 +8,8 @@ type
 
   Point3* = distinct Vec3
 
+  Color* = distinct Vec3
+
 
 func newVec3*(x, y, z: float): Vec3 =
   Vec3(e: [x, y, z])
@@ -83,6 +85,9 @@ func unit*(self: Vec3): Vec3 =
 func toPoint*(self: Vec3): Point3 =
   self.Point3
 
+func toColor*(self: Vec3): Color =
+  self.Color
+
 
 func newPoint3*(x, y, z: float): Point3 =
   newVec3(x, y, z).Point3
@@ -109,3 +114,38 @@ func unit*(self: Point3): Point3 {.borrow.}
 
 func toVec*(self: Point3): Vec3 =
   self.Vec3
+
+
+func newColor*(x, y, z: float): Color =
+  newVec3(x, y, z).Color
+
+func `[]`*(self: Color, i: int): float {.borrow.}
+func x(self: Color): float {.borrow.}
+func y(self: Color): float {.borrow.}
+func z(self: Color): float {.borrow.}
+
+func r*(self: Color): float =
+  self.x
+
+func g*(self: Color): float =
+  self.y
+
+func b*(self: Color): float =
+  self.z
+
+func `-`*(self: Color): Color {.borrow.}
+func `+`*(self, color: Color): Color {.borrow.}
+func `-`*(self, color: Color): Color {.borrow.}
+func `*`*(self, color: Color): Color {.borrow.}
+func `*`*(self: Color, scalar: float): Color {.borrow.}
+func `*`*(scalar: float, color: Color): Color {.borrow.}
+func `/`*(self: Color, scalar: float): Color {.borrow.}
+func `dot`*(self, color: Color): float {.borrow.}
+func `cross`*(self, color: Color): Color {.borrow.}
+func `+=`*(self: var Color, color: Color) {.borrow.}
+func `*=`*(self: var Color, scalar: float) {.borrow.}
+func `/=`*(self: var Color, scalar: float) {.borrow.}
+func lengthSquared*(self: Color): float {.borrow.}
+func length*(self: Color): float {.borrow.}
+func unit*(self: Color): Color {.borrow.}
+

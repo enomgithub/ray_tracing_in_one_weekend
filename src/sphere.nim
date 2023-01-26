@@ -6,13 +6,12 @@ import vec3
 
 
 type
-  Sphere* {.explain.} = concept x
-    x is Hittable
-    x.center is Point3
-    x.radius is float
+  Sphere* = ref object
+    center*: Point3
+    radius*: float
 
 
-proc hit(self: Sphere, r: Ray, tMin, tMax: float, rec: var HitRecord): bool =
+proc hit*(self: Sphere, r: Ray, tMin, tMax: float, rec: var HitRecord): bool =
   let
     oc = r.origin - self.center
     a = r.direction.lengthSquared
@@ -43,6 +42,6 @@ func newSphere*(center: Point3, radius: float): Sphere =
   Sphere(
     center: center,
     radius: radius,
-    hit: proc(self: Sphere, r: Ray, tMin, tMax: float, rec: var HitRecord): bool =
-      self.hit(r, tMin, tMax, rec)
+    # hit: proc(self: Sphere, r: Ray, tMin, tMax: float, rec: var HitRecord): bool =
+    #   self.hit(r, tMin, tMax, rec)
   )
