@@ -1,5 +1,4 @@
 import std/algorithm
-import std/math
 import std/sequtils
 import std/strformat
 import std/terminal
@@ -12,21 +11,9 @@ import sphere
 import vec3 
 
 
-func hitSphere(center: Point3, radius: float, r: Ray): float =
-  let
-    oc = r.origin - center
-    a = r.direction.lengthSquared
-    halfB = oc.toVec.dot r.direction
-    c = oc.toVec.lengthSquared - radius * radius
-    discriminant = halfB * halfB - a * c
-
-  if discriminant < 0: -1.0
-  else: (-halfB - discriminant.sqrt) / a
-
-
-func rayColor(r: Ray, world: HittableList): Color =
+func getColor(r: Ray, world: HittableList): Color =
   var rec: HitRecord
-  if world.hit(r, 0, Inf, rec):
+  if hit(world, r, 0, Inf, rec):
     return 0.5 * (rec.normal.toColor + newColor(1, 1, 1))
 
   let
@@ -42,7 +29,7 @@ proc main(): cint =
     imageWidth = 400
     imageHeight = (imageWidth / aspectRatio).int
 
-  let world = newHittableList()
+  let world = newHittableList[Sphere]()
   world.add(newSphere(newPoint3(0, 0, -1), 0.5))
   world.add(newSphere(newPoint3(0, -100.5, -1), 100))
 
@@ -66,10 +53,10 @@ proc main(): cint =
       let
         u = (i / (imageWidth - 1)).float
         v = (j / (imageHeight - 1)).float
-        r = newRay(origin, lowerLeftCorner + u * horizontal + v * vertical - origin.toVec)
-        pixelColor = rayColor(r, world)
+        ray = newRay(origin, lowerLeftCorner + u * horizontal + v * vertical - origin.toVec)
+        pixelColor = ray.getColor(world)
 
-      writeColor(stdout, pixelColor)
+      stdout.writeColor(pixelColor)
 
     stderr.cursorUp(1)
     stderr.eraseLine

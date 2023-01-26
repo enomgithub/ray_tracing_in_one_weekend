@@ -3,15 +3,14 @@ import vec3
 
 
 type
-  HitRecord* {.explain.} = ref object
+  HitRecord* = ref object
     p*: Point3
     normal*: Vec3
     t*: float
     isFrontFace*: bool
-    # setFaceNormal is proc(self: var typeof x, r: Ray, outwardNormal: Vec3)
 
-  Hittable* {.explain.} = concept x
-    x.hit is proc(self: typeof x, r: Ray, tMin, tMax: float, rec: var HitRecord): bool
+  Hittable* {.explain.} = concept
+    proc hit(self: Self, r: Ray, tMin, tMax: float, rec: var HitRecord): bool
 
 
 proc setFaceNormal*(self: var HitRecord, r: Ray, outwardNormal: Vec3) =
@@ -26,7 +25,5 @@ proc newHitRecord*(p: Point3, normal: Vec3, t: float, isFrontFace: bool): HitRec
     p: p,
     normal: normal,
     t: t,
-    isFrontFace: isFrontFace,
-    # setFaceNormal: proc(self: var HitRecord, r: Ray, outwardNormal: Vec3) =
-    #   self.setFaceNormal(r, outwardNormal)
+    isFrontFace: isFrontFace
   )

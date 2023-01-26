@@ -4,14 +4,17 @@ import sphere
 
 
 type
-  HittableList* = ref object
-    # hit: proc(self: HittableList, r: Ray, tMin, tMax: float, rec: var HitRecord): bool
-    # clear: proc(self: HittableList)
-    # add: proc(self: HittableList, obj: T)
-    objects: seq[Sphere]
+  HittableList*[Hittable] = ref object
+    objects: seq[Hittable]
 
 
-func hit*(self: HittableList, r: Ray, tMin, tMax: float, rec: var HitRecord): bool =
+func hit*[T: Hittable](
+  self: HittableList[T],
+  r: Ray,
+  tMin: float,
+  tMax: float,
+  rec: var HitRecord
+): bool =
   var
     tempRec = new HitRecord
     hitAnything = false
@@ -26,19 +29,13 @@ func hit*(self: HittableList, r: Ray, tMin, tMax: float, rec: var HitRecord): bo
   hitAnything
 
 
-proc clear*(self: HittableList) =
+proc clear*[T: Hittable](self: HittableList[T]) =
   self.objects = @[]
 
 
-proc add*(self: HittableList, obj: Sphere) =
+proc add*[T: Hittable](self: HittableList[T], obj: T) =
   self.objects.add(obj)
 
 
-func newHittableList*(objects: seq[Sphere] = @[]): HittableList =
-  HittableList(
-    objects: objects,
-    # hit: proc(self: HittableList, r: Ray, tMin, tMax: float, rec: var HitRecord): bool =
-    #   self.hit(r, tMin, tMax, rec),
-    # clear: proc(self: HittableList) = self.clear(),
-    # add: proc(self: HittableList, obj: T) = self.add(obj)
-  )
+func newHittableList*[T: Hittable](objects: seq[T] = @[]): HittableList[T] =
+  HittableList[T](objects: objects)

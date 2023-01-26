@@ -39,9 +39,4 @@ proc hit*(self: Sphere, r: Ray, tMin, tMax: float, rec: var HitRecord): bool =
 
 
 func newSphere*(center: Point3, radius: float): Sphere =
-  Sphere(
-    center: center,
-    radius: radius,
-    # hit: proc(self: Sphere, r: Ray, tMin, tMax: float, rec: var HitRecord): bool =
-    #   self.hit(r, tMin, tMax, rec)
-  )
+  Sphere(center: center, radius: radius)
