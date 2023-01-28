@@ -11,3 +11,10 @@ bin           = @["ray_tracing_in_one_weekend"]
 # Dependencies
 
 requires "nim >= 1.6.8"
+
+
+# Tasks
+
+task release, "release build":
+  let command = "nimble build -d:release --mm:orc"
+  exec(command)
