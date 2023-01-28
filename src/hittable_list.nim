@@ -1,41 +1,34 @@
+import std/options
+
 import hittable
-import ray
-import sphere
+import types
 
 
-type
-  HittableList*[Hittable] = ref object
-    objects: seq[Hittable]
-
-
-func hit*[T: Hittable](
-  self: HittableList[T],
-  r: Ray,
-  tMin: float,
-  tMax: float,
-  rec: var HitRecord
-): bool =
+func hit*(self: HittableList, r: Ray, tMin: float, tMax: float): Option[HitRecord] =
   var
-    tempRec = new HitRecord
+    rec = new HitRecord
     hitAnything = false
     closestSoFar = tMax
   
   for obj in self.objects:
-    if obj.hit(r, tMin, closestSoFar, tempRec):
+    let res = obj.hit(r, tMin, closestSoFar)
+    if res.isSome:
       hitAnything = true
+      let tempRec = res.get
       closestSoFar = tempRec.t
       rec = tempRec
-  
-  hitAnything
+
+  if hitAnything: some(rec)
+  else: none(HitRecord)
 
 
-proc clear*[T: Hittable](self: HittableList[T]) =
+proc clear*(self: HittableList) =
   self.objects = @[]
 
 
-proc add*[T: Hittable](self: HittableList[T], obj: T) =
+proc add*(self: HittableList, obj: Hittable) =
   self.objects.add(obj)
 
 
-func newHittableList*[T: Hittable](objects: seq[T] = @[]): HittableList[T] =
-  HittableList[T](objects: objects)
+func newHittableList*(objects: seq[Hittable] = @[]): HittableList =
+  HittableList(objects: objects)

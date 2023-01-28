@@ -1,9 +1,5 @@
+import types
 import vec3
-
-
-type Ray* = ref object
-  orig: Point3
-  dir: Vec3
 
 
 func origin*(self: Ray): Point3 =

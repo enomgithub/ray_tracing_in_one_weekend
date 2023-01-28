@@ -2,6 +2,7 @@ import std/math
 import std/strformat
 import std/terminal
 
+import types
 import vec3
 
 

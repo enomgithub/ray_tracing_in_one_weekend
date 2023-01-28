@@ -2,15 +2,7 @@ import std/math
 import std/strformat
 
 import rtweekend
-
-
-type
-  Vec3* = ref object
-    e: array[3, float]
-
-  Point3* = distinct Vec3
-
-  Color* = distinct Vec3
+import types
 
 
 func newVec3*(x, y, z: float): Vec3 =
@@ -84,6 +76,13 @@ func length*(self: Vec3): float =
 func unit*(self: Vec3): Vec3 =
   self / self.length
 
+func nearZero*(self: Vec3): bool =
+  let s = 1e-8
+  self.x.abs < s and self.y.abs < s and self.z.abs < s
+
+func reflect*(self, n: Vec3): Vec3 =
+  self - 2 * (self.dot n) * n
+
 func toPoint*(self: Vec3): Point3 =
   self.Point3
 
@@ -105,6 +104,11 @@ proc randomInUnitSphere*(): Vec3 =
 
 proc randomUnitVector*(): Vec3 =
   randomInUnitSphere().unit
+
+proc randomInHemisphere*(normal: Vec3): Vec3 =
+  let inUnitSphere = randomInUnitSphere()
+  if (inUnitSphere.dot normal) > 0.0: inUnitSphere
+  else: -inUnitSphere
 
 
 func newPoint3*(x, y, z: float): Point3 =

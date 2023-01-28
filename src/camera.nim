@@ -1,18 +1,6 @@
 import ray
+import types
 import vec3
-
-
-type
-  Camera* = ref object
-    aspectRatio*: float
-    viewportHeight*: float
-    viewportWidth*: float
-    focalLength*: float
-
-    origin*: Point3
-    horizontal*: Vec3
-    vertical*: Vec3
-    lowerLeftCorner*: Vec3
 
 
 func newCamera*(): Camera =

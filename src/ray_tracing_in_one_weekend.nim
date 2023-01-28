@@ -1,4 +1,5 @@
 import std/algorithm
+import std/options
 import std/sequtils
 import std/strformat
 import std/terminal
@@ -7,9 +8,10 @@ import camera
 import color
 import hittable
 import hittable_list
+import material
 import ray
 import rtweekend
-import sphere
+import types
 import vec3 
 
 
@@ -17,10 +19,15 @@ proc getColor(r: Ray, world: HittableList, depth: int): Color =
   if depth <= 0:
     return newColor(0, 0, 0)
 
-  var rec: HitRecord
-  if world.hit(r, 0.001, Inf, rec):
-    let target = rec.p + rec.normal.toPoint + randomUnitVector().toPoint
-    return 0.5 * newRay(rec.p, target.toVec - rec.p.toVec).getColor(world, depth - 1)
+  let res = world.hit(r, 0.001, Inf)
+  if res.isSome:
+    let
+      rec = res.get
+      (isHit, scattered, attenuation) = rec.material.scatter(r, rec)
+    
+    if isHit:
+      return attenuation * scattered.getColor(world, depth - 1)
+    return newColor(0, 0, 0)
 
   let
     unitDirection = r.direction.unit
@@ -37,9 +44,17 @@ proc main(): cint =
     samplesPerPixel = 100
     maxDepth = 50
 
-  let world = newHittableList[Sphere]()
-  world.add(newSphere(newPoint3(0, 0, -1), 0.5))
-  world.add(newSphere(newPoint3(0, -100.5, -1), 100))
+  let
+    world = newHittableList()
+    materialGround = newMaterial(newLambertian(newColor(0.8, 0.8, 0.0)))
+    materialCenter = newMaterial(newLambertian(newColor(0.7, 0.3, 0.3)))
+    materialLeft = newMaterial(newMetal(newColor(0.8, 0.8, 0.8)))
+    materialRight = newMaterial(newMetal(newColor(0.8, 0.6, 0.2)))
+
+  world.add(newHittable(newSphere(newPoint3(0.0, -100.5, -1.0), 100.0, materialGround)))
+  world.add(newHittable(newSphere(newPoint3(0.0, 0.0, -1.0), 0.5, materialCenter)))
+  world.add(newHittable(newSphere(newPoint3(-1.0, 0.0, -1.0), 0.5, materialLeft)))
+  world.add(newHittable(newSphere(newPoint3(1.0, 0.0, -1.0), 0.5, materialRight)))
 
   let camera = newCamera()
 
