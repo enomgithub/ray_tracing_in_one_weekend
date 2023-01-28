@@ -1,6 +1,8 @@
 import std/math
 import std/strformat
 
+import rtweekend
+
 
 type
   Vec3* = ref object
@@ -87,6 +89,19 @@ func toPoint*(self: Vec3): Point3 =
 
 func toColor*(self: Vec3): Color =
   self.Color
+
+
+proc random*(): Vec3 =
+  newVec3(randomFloat(), randomFloat(), randomFloat())
+
+proc random*(min, max: float): Vec3 =
+  newVec3(randomFloat(min, max), randomFloat(min, max), randomFloat(min, max))
+
+proc randomInUnitSphere*(): Vec3 =
+  while true:
+    let p = random(-1.0, 1.0)
+    if p.lengthSquared >= 1: continue
+    return p
 
 
 func newPoint3*(x, y, z: float): Point3 =

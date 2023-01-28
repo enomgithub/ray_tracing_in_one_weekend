@@ -13,10 +13,14 @@ import sphere
 import vec3 
 
 
-func getColor(r: Ray, world: HittableList): Color =
+proc getColor(r: Ray, world: HittableList, depth: int): Color =
+  if depth <= 0:
+    return newColor(0, 0, 0)
+
   var rec: HitRecord
-  if hit(world, r, 0, Inf, rec):
-    return 0.5 * (rec.normal.toColor + newColor(1, 1, 1))
+  if world.hit(r, 0, Inf, rec):
+    let target = rec.p + rec.normal.toPoint + randomInUnitSphere().toPoint
+    return 0.5 * newRay(rec.p, target.toVec - rec.p.toVec).getColor(world, depth - 1)
 
   let
     unitDirection = r.direction.unit
@@ -31,6 +35,7 @@ proc main(): cint =
     imageWidth = 400
     imageHeight = (imageWidth / aspectRatio).int
     samplesPerPixel = 100
+    maxDepth = 50
 
   let world = newHittableList[Sphere]()
   world.add(newSphere(newPoint3(0, 0, -1), 0.5))
@@ -50,7 +55,7 @@ proc main(): cint =
           u = (i.float + randomFloat()) / (imageWidth - 1)
           v = (j.float + randomFloat()) / (imageHeight - 1)
           ray = camera.getRay(u, v)
-        pixelColor += ray.getColor(world)
+        pixelColor += ray.getColor(world, maxDepth)
 
       stdout.writeColor(pixelColor, samplesPerPixel)
 
