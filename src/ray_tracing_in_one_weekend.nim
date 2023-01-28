@@ -18,8 +18,8 @@ proc getColor(r: Ray, world: HittableList, depth: int): Color =
     return newColor(0, 0, 0)
 
   var rec: HitRecord
-  if world.hit(r, 0, Inf, rec):
-    let target = rec.p + rec.normal.toPoint + randomInUnitSphere().toPoint
+  if world.hit(r, 0.001, Inf, rec):
+    let target = rec.p + rec.normal.toPoint + randomUnitVector().toPoint
     return 0.5 * newRay(rec.p, target.toVec - rec.p.toVec).getColor(world, depth - 1)
 
   let

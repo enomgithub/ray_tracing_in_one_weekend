@@ -103,6 +103,9 @@ proc randomInUnitSphere*(): Vec3 =
     if p.lengthSquared >= 1: continue
     return p
 
+proc randomUnitVector*(): Vec3 =
+  randomInUnitSphere().unit
+
 
 func newPoint3*(x, y, z: float): Point3 =
   newVec3(x, y, z).Point3
