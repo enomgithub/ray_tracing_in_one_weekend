@@ -57,13 +57,13 @@ proc main(): cint =
   world.add(newHittable(newSphere(newPoint3(-1.0, 0.0, -1.0), -0.45, materialLeft)))
   world.add(newHittable(newSphere(newPoint3(1.0, 0.0, -1.0), 0.5, materialRight)))
 
-  let camera = newCamera(
-    newPoint3(-2.0, 2.0, 1.0),
-    newPoint3(0.0, 0.0, -1.0),
-    newVec3(0.0, 1.0, 0.0),
-    20.0,
-    aspectRatio
-  )
+  let
+    lookfrom = newPoint3(-2.0, 2.0, 1.0)
+    lookat = newPoint3(0.0, 0.0, -1.0)
+    vup = newVec3(0.0, 1.0, 0.0)
+    distToFocus = (lookfrom - lookat).length
+    aperture = 2.0
+    camera = newCamera(lookfrom, lookat, vup, 20.0, aspectRatio, aperture, distToFocus)
 
   echo "P3"
   echo fmt"{imageWidth} {imageHeight}"

@@ -117,6 +117,12 @@ proc randomInHemisphere*(normal: Vec3): Vec3 =
   if (inUnitSphere.dot normal) > 0.0: inUnitSphere
   else: -inUnitSphere
 
+proc randomInUnitDisk*(): Vec3 =
+  while true:
+    let p = newVec3(randomFloat(-1.0, 1.0), randomFloat(-1.0, 1.0), 0.0)
+    if p.lengthSquared >= 1.0: continue
+    return p
+
 
 func newPoint3*(x, y, z: float): Point3 =
   newVec3(x, y, z).Point3

@@ -5,40 +5,45 @@ import types
 import vec3
 
 
-func newCamera*(lookfrom, lookat: Point3, vup: Vec3, vfov, aspectRatio: float): Camera =
+func newCamera*(
+  lookfrom, lookat: Point3,
+  vup: Vec3,
+  vfov, aspectRatio, aperture, focusDist: float
+): Camera =
   let
     theta = vfov.degToRad
     h = tan(theta / 2.0)
     viewportHeight = 2.0 * h
     viewportWidth = aspectRatio * viewportHeight
 
-    w = (lookfrom - lookat).unit
-    u = (vup.cross w.toVec).unit
-    v = w.toVec.cross u
+    w = (lookfrom - lookat).toVec.unit
+    u = (vup.cross w).unit
+    v = w.cross u
 
-  const
-    focalLength = 1.0
-
-  let
     origin = lookfrom
-    horizontal = viewportWidth * u
-    vertical = viewportHeight * v
-    lowerLeftCorner = origin.toVec - horizontal / 2 - vertical / 2 - w.toVec
+    horizontal = focusDist * viewportWidth * u
+    vertical = focusDist * viewportHeight * v
+    lowerLeftCorner = origin.toVec - horizontal / 2 - vertical / 2 - focusDist * w
+
+    lensRadius = aperture / 2.0
 
   Camera(
-    aspectRatio: aspectRatio,
-    viewportHeight: viewportHeight,
-    viewportWidth: viewportWidth,
-    focalLength: focalLength,
     origin: origin,
+    lowerLeftCorner: lowerLeftCorner,
     horizontal: horizontal,
     vertical: vertical,
-    lowerLeftCorner: lowerLeftCorner
+    u: u,
+    v: v,
+    w: w,
+    lensRadius: lensRadius
   )
 
 
-func getRay*(self: Camera, s, t: float): Ray =
+proc getRay*(self: Camera, s, t: float): Ray =
+  let
+    rd = self.lensRadius * randomInUnitDisk()
+    offset = self.u * rd.x + self.v * rd.y
   newRay(
-    self.origin,
-    self.lowerLeftCorner + s * self.horizontal + t * self.vertical - self.origin.toVec
+    self.origin + offset.toPoint,
+    self.lowerLeftCorner + s * self.horizontal + t * self.vertical - self.origin.toVec - offset
   )

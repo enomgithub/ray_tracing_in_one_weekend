@@ -66,13 +66,10 @@ type
     objects*: seq[Hittable]
 
   Camera* = ref object
-    aspectRatio*: float
-    viewportHeight*: float
-    viewportWidth*: float
-    focalLength*: float
-
     origin*: Point3
     horizontal*: Vec3
     vertical*: Vec3
     lowerLeftCorner*: Vec3
+    u*, v*, w*: Vec3
+    lensRadius*: float
 
