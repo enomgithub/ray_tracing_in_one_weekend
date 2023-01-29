@@ -54,10 +54,16 @@ proc main(): cint =
   world.add(newHittable(newSphere(newPoint3(0.0, -100.5, -1.0), 100.0, materialGround)))
   world.add(newHittable(newSphere(newPoint3(0.0, 0.0, -1.0), 0.5, materialCenter)))
   world.add(newHittable(newSphere(newPoint3(-1.0, 0.0, -1.0), 0.5, materialLeft)))
-  world.add(newHittable(newSphere(newPoint3(-1.0, 0.0, -1.0), -0.4, materialLeft)))
+  world.add(newHittable(newSphere(newPoint3(-1.0, 0.0, -1.0), -0.45, materialLeft)))
   world.add(newHittable(newSphere(newPoint3(1.0, 0.0, -1.0), 0.5, materialRight)))
 
-  let camera = newCamera()
+  let camera = newCamera(
+    newPoint3(-2.0, 2.0, 1.0),
+    newPoint3(0.0, 0.0, -1.0),
+    newVec3(0.0, 1.0, 0.0),
+    20.0,
+    aspectRatio
+  )
 
   echo "P3"
   echo fmt"{imageWidth} {imageHeight}"
