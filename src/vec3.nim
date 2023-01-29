@@ -83,6 +83,13 @@ func nearZero*(self: Vec3): bool =
 func reflect*(self, n: Vec3): Vec3 =
   self - 2 * (self.dot n) * n
 
+func refract*(uv, n: Vec3, etaiOverEtat: float): Vec3 =
+  let
+    cosTheta = min((-uv.dot n), 1.0)
+    rOutPerp = etaiOverEtat * (uv + cosTheta * n)
+    rOutParallel = -sqrt(abs(1.0 - rOutPerp.lengthSquared)) * n
+  rOutPerp + rOutParallel
+
 func toPoint*(self: Vec3): Point3 =
   self.Point3
 

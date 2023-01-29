@@ -18,10 +18,14 @@ type
   Metal* = ref object
     albedo*: Color
     fuzz*: float
+  
+  Dielectric* = ref object
+    ir*: float
 
   MaterialKind* = enum
     mkLambertian
     mkMetal
+    mkDielectric
 
   Material* = object
     case kind*: MaterialKind
@@ -29,6 +33,8 @@ type
       lambertian*: Lambertian
     of mkMetal:
       metal*: Metal
+    of mkDielectric:
+      dielectric*: Dielectric
 
   HitRecord* = ref object
     p*: Point3

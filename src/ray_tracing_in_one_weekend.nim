@@ -47,13 +47,14 @@ proc main(): cint =
   let
     world = newHittableList()
     materialGround = newMaterial(newLambertian(newColor(0.8, 0.8, 0.0)))
-    materialCenter = newMaterial(newLambertian(newColor(0.7, 0.3, 0.3)))
-    materialLeft = newMaterial(newMetal(newColor(0.8, 0.8, 0.8), 0.3))
-    materialRight = newMaterial(newMetal(newColor(0.8, 0.6, 0.2), 1.0))
+    materialCenter = newMaterial(newLambertian(newColor(0.1, 0.2, 0.5)))
+    materialLeft = newMaterial(newDielectric(1.5))
+    materialRight = newMaterial(newMetal(newColor(0.8, 0.6, 0.2), 0.0))
 
   world.add(newHittable(newSphere(newPoint3(0.0, -100.5, -1.0), 100.0, materialGround)))
   world.add(newHittable(newSphere(newPoint3(0.0, 0.0, -1.0), 0.5, materialCenter)))
   world.add(newHittable(newSphere(newPoint3(-1.0, 0.0, -1.0), 0.5, materialLeft)))
+  world.add(newHittable(newSphere(newPoint3(-1.0, 0.0, -1.0), -0.4, materialLeft)))
   world.add(newHittable(newSphere(newPoint3(1.0, 0.0, -1.0), 0.5, materialRight)))
 
   let camera = newCamera()
