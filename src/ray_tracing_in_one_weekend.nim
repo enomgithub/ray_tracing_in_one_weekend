@@ -36,33 +36,62 @@ proc getColor(r: Ray, world: HittableList, depth: int): Color =
   (1.0 - t) * newColor(1.0, 1.0, 1.0) + t * newColor(0.5, 0.7, 1.0)
 
 
+proc randomScene(): HittableList =
+  let
+    world = newHittableList()
+    groundMaterial = newMaterial(newLambertian(newColor(0.5, 0.5, 0.5)))
+  
+  world.add(newHittable(newSphere(newPoint3(0.0, -1000.0, 0.0), 1000.0, groundMaterial)))
+
+  for a in -11..<11:
+    for b in -11..<11:
+      let
+        chooseMat = randomFloat()
+        center = newPoint3(a.float + 0.9 * randomFloat(), 0.2, b.float + 0.9 * randomFloat())
+
+      if (center - newPoint3(4.0, 0.2, 0.0)).length > 0.9:
+        let sphereMaterial =
+          if chooseMat < 0.8:
+            let albedo = random().toColor
+            newMaterial(newLambertian(albedo))
+          elif chooseMat < 0.95:
+            let
+              albedo = random().toColor
+              fuzz = randomFloat(0.0, 0.5)
+            newMaterial(newMetal(albedo, fuzz))
+          else:
+            newMaterial(newDielectric(1.5))
+        
+        world.add(newHittable(newSphere(center, 0.2, sphereMaterial)))
+  
+  let
+    material1 = newMaterial(newDielectric(1.5))
+    material2 = newMaterial(newLambertian(newColor(0.4, 0.2, 0.1)))
+    material3 = newMaterial(newMetal(newColor(0.7, 0.6, 0.5), 0.0))
+
+  world.add(newHittable(newSphere(newPoint3(0.0, 1.0, 0.0), 1.0, material1)))
+  world.add(newHittable(newSphere(newPoint3(-4.0, 1.0, 0.0), 1.0, material2)))
+  world.add(newHittable(newSphere(newPoint3(4.0, 1.0, 0.0), 1.0, material3)))
+
+  world
+
+
 proc main(): cint =
   const
-    aspectRatio = 16.0 / 9.0
-    imageWidth = 400
+    aspectRatio = 3.0 / 2.0
+    imageWidth = 1200
     imageHeight = (imageWidth / aspectRatio).int
-    samplesPerPixel = 100
+    samplesPerPixel = 500
     maxDepth = 50
 
   let
-    world = newHittableList()
-    materialGround = newMaterial(newLambertian(newColor(0.8, 0.8, 0.0)))
-    materialCenter = newMaterial(newLambertian(newColor(0.1, 0.2, 0.5)))
-    materialLeft = newMaterial(newDielectric(1.5))
-    materialRight = newMaterial(newMetal(newColor(0.8, 0.6, 0.2), 0.0))
+    world = randomScene()
 
-  world.add(newHittable(newSphere(newPoint3(0.0, -100.5, -1.0), 100.0, materialGround)))
-  world.add(newHittable(newSphere(newPoint3(0.0, 0.0, -1.0), 0.5, materialCenter)))
-  world.add(newHittable(newSphere(newPoint3(-1.0, 0.0, -1.0), 0.5, materialLeft)))
-  world.add(newHittable(newSphere(newPoint3(-1.0, 0.0, -1.0), -0.45, materialLeft)))
-  world.add(newHittable(newSphere(newPoint3(1.0, 0.0, -1.0), 0.5, materialRight)))
-
-  let
-    lookfrom = newPoint3(-2.0, 2.0, 1.0)
-    lookat = newPoint3(0.0, 0.0, -1.0)
+    lookfrom = newPoint3(13.0, 2.0, 3.0)
+    lookat = newPoint3(0.0, 0.0, 0.0)
     vup = newVec3(0.0, 1.0, 0.0)
-    distToFocus = (lookfrom - lookat).length
-    aperture = 2.0
+    distToFocus = 10.0
+    aperture = 0.1
     camera = newCamera(lookfrom, lookat, vup, 20.0, aspectRatio, aperture, distToFocus)
 
   echo "P3"
