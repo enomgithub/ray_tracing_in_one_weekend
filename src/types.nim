@@ -17,6 +17,7 @@ type
   
   Metal* = ref object
     albedo*: Color
+    fuzz*: float
 
   MaterialKind* = enum
     mkLambertian

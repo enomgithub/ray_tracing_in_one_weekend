@@ -19,16 +19,16 @@ func newLambertian*(albedo: Color): Lambertian =
   Lambertian(albedo: albedo)
 
 
-func scatter*(self: Metal, rayIn: Ray, rec: HitRecord): (bool, Ray, Color) =
+proc scatter*(self: Metal, rayIn: Ray, rec: HitRecord): (bool, Ray, Color) =
   let
     reflected = rayIn.direction.unit.reflect(rec.normal)
-    scattered = newRay(rec.p, reflected)
+    scattered = newRay(rec.p, reflected + self.fuzz * randomInUnitSphere())
     attenuation = self.albedo
 
   ((scattered.direction.dot rec.normal) > 0, scattered, attenuation)
 
-func newMetal*(albedo: Color): Metal =
-  Metal(albedo: albedo)
+func newMetal*(albedo: Color, fuzz: float): Metal =
+  Metal(albedo: albedo, fuzz: fuzz.clamp(0.0, 1.0))
 
 
 proc scatter*(self: Material, rayIn: Ray, rec: HitRecord): (bool, Ray, Color) =
