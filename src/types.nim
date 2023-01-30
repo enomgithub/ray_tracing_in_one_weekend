@@ -1,25 +1,30 @@
 import std/options
 
 type
-  Vec3* = ref object
+  Vec3* = object
     e*: array[3, float]
 
   Point3* = distinct Vec3
 
   Color* = distinct Vec3
 
-  Ray* = ref object
+  RGBColor* = object
+    r*: int
+    g*: int
+    b*: int
+
+  Ray* = object
     orig*: Point3
     dir*: Vec3
  
-  Lambertian* = ref object
+  Lambertian* = object
     albedo*: Color
   
-  Metal* = ref object
+  Metal* = object
     albedo*: Color
     fuzz*: float
   
-  Dielectric* = ref object
+  Dielectric* = object
     ir*: float
 
   MaterialKind* = enum
@@ -49,7 +54,7 @@ type
   HittableImpl* {.explain.} = concept
     proc hit(self: Self, r: Ray, tMin, tMax: float): Option[HitRecord]
 
-  Sphere* = ref object
+  Sphere* = object
     center*: Point3
     radius*: float
     material*: Material
@@ -57,7 +62,7 @@ type
   HittableKind* = enum
     hkSphere
 
-  Hittable* = ref object
+  Hittable* = object
     case kind*: HittableKind
     of hkSphere:
       sphere*: Sphere
@@ -65,7 +70,7 @@ type
   HittableList* = ref object
     objects*: seq[Hittable]
 
-  Camera* = ref object
+  Camera* = object
     origin*: Point3
     horizontal*: Vec3
     vertical*: Vec3

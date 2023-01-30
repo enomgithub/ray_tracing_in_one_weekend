@@ -16,5 +16,5 @@ requires "nim >= 1.6.8"
 # Tasks
 
 task release, "release build":
-  let command = "nimble build -d:release --mm:orc"
+  let command = "nimble build -d:release --mm:orc --threads:on"
   exec(command)
